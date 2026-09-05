@@ -1,121 +1,62 @@
-# 🤖 Industrial Robot Performance Analytics
+# Industrial Robot Performance Analytics
 
-## Predictive Maintenance & Operational Risk Analytics using Power BI
+## Project Overview
 
-![Power BI](https://img.shields.io/badge/Power%20BI-Analytics-F2C811?logo=powerbi&logoColor=black)
-![Excel](https://img.shields.io/badge/Data-Excel-217346?logo=microsoftexcel&logoColor=white)
-![Status](https://img.shields.io/badge/Project-Completed-success)
+**Industrial Robot Performance Analytics** is a Power BI capstone project designed to analyze industrial robot operations, production performance, robot health, maintenance activity, downtime, failure patterns, and operational risk.
 
----
+The project uses a custom synthetic dataset based on industrial predictive-maintenance concepts and presents the results through an interactive three-page Power BI dashboard.
 
-## 📌 Project Overview
+> **Note:** All data used in this project is synthetic and created for educational, portfolio, and demonstration purposes. It does not represent data from a real industrial plant.
 
-Industrial robots are critical components of modern manufacturing systems. 
-Unexpected robot failures can lead to production losses, increased downtime, 
-higher maintenance costs, and quality problems.
+## Problem Statement
 
-This project develops an interactive **Power BI dashboard** for analyzing:
+Industrial robots are critical to automated manufacturing. Unexpected failures, poor robot health, excessive downtime, and high maintenance costs can reduce productivity and increase operational expenses.
 
-- Robot health
-- Production performance
-- Defect rate
-- Sensor conditions
-- Maintenance cost
-- Downtime
-- Failure types
-- Robot risk
-- High-risk robot groups
-- Manufacturer-level risk
+This project builds a centralized analytics solution to identify:
 
-The objective is to transform operational and maintenance data into 
-actionable business insights that can support proactive maintenance decisions.
+- Overall production and operational performance
+- Robot health and sensor conditions
+- High-risk robots and robot types
+- Major failure types
+- Maintenance cost drivers
+- Downtime drivers
+- Areas requiring maintenance attention
 
----
+## Project Objectives
 
-# 🎯 Problem Statement
+1. Monitor overall robot and production performance.
+2. Analyze robot health using sensor data.
+3. Identify high-risk robots and robot categories.
+4. Analyze maintenance cost and downtime.
+5. Identify important failure types.
+6. Compare robot types and manufacturers.
+7. Provide actionable insights through an interactive Power BI dashboard.
 
-How can an organization use integrated robot, sensor, production, and 
-maintenance data to identify unhealthy or high-risk robots, understand the 
-major causes of downtime and maintenance costs, and support proactive 
-maintenance decisions?
+## Tools & Technologies
 
----
+- **Microsoft Power BI** — Data modeling, DAX, visualization, and dashboard development
+- **Microsoft Excel** — Dataset storage and preparation
+- **DAX** — Analytical measures and calculations
+- **Power Query** — Data transformation and cleaning
 
-# 💡 Why This Project?
+## Dataset
 
-Industrial robot failures can negatively affect:
-
-- Production continuity
-- Product quality
-- Maintenance expenditure
-- Equipment availability
-- Overall operational efficiency
-
-A centralized analytics dashboard can help management identify where risk 
-and maintenance problems are concentrated and prioritize corrective action.
-
----
-
-# 🛠️ Tools & Technologies
-
-- Microsoft Power BI
-- DAX
-- Microsoft Excel
-- Data Modeling
-- Data Visualization
-- Predictive Maintenance Concepts
-- Risk Analysis
-- Business Intelligence
-
----
-
-# 📊 Dataset
-
-## Reference Dataset
-
-An existing industrial predictive-maintenance dataset from Kaggle was used 
-as a reference to understand the structure and variables commonly used in 
-predictive-maintenance analytics.
-
-Kaggle Reference:
-
-https://www.kaggle.com/datasets/tatheerabbas/industrial-machine-predictive-maintenance
-
-The Kaggle dataset was **not used as the final dashboard dataset**.
-
-Instead, a custom synthetic dataset was created based on realistic 
-industrial predictive-maintenance concepts and adapted specifically for 
-industrial robot analysis.
-
----
-
-# 🧩 Synthetic Dataset
-
-The final project uses four Excel files:
+The project uses four integrated Excel datasets.
 
 ### 1. Robot_Master.xlsx
 
-Contains master information about the robot fleet.
+Master information for each industrial robot.
 
-Important fields include:
-
+Key fields:
 - Robot_ID
 - Robot_Type
 - Manufacturer
 
-Purpose:
-
-Provides the unique robot population and descriptive attributes used for 
-filtering and grouping.
-
----
-
 ### 2. Sensor_Data.xlsx
 
-Contains robot condition-monitoring data.
+Robot condition-monitoring data.
 
-Important fields include:
-
+Key fields:
 - Robot_ID
 - Date
 - Temperature
@@ -127,63 +68,233 @@ Important fields include:
 - Tool_Wear
 - Health_Score
 
-Purpose:
-
-Used to analyze robot health and relationships between sensor conditions 
-and robot condition.
-
----
-
 ### 3. Production_Log.xlsx
 
-Contains robot production activity.
+Production and quality information.
 
-Important fields include:
-
+Key fields:
 - Robot_ID
 - Date
 - Units_Produced
-- Defect information
-
-Purpose:
-
-Used to analyze production volume, production trends, and defect rate.
-
----
+- Defective_Units
+- Efficiency
+- Cycle_Time
 
 ### 4. Maintenance_Log.xlsx
 
-Contains maintenance and failure information.
+Maintenance and failure information.
 
-Important fields include:
-
+Key fields:
+- Maintenance_ID
 - Robot_ID
 - Date
 - Maintenance_Type
 - Failure_Type
 - Maintenance_Cost
-- Downtime_Hours
+- Downtime
+- Technician
 
-Purpose:
+## Dataset Reference
 
-Used to analyze maintenance expenditure, failures, and operational downtime.
+The synthetic dataset was developed using industrial predictive-maintenance datasets available on Kaggle as a reference for feature selection, machine-condition concepts, and dataset structure.
 
----
+The final dataset in this repository is **custom synthetic data** and is not copied from real-world plant data.
 
-# 🔗 Data Model
+## Data Model
 
-The Power BI model connects the four main datasets using common keys.
-
-### Main relationships
+The Power BI model follows a structured relational/star-schema approach.
 
 ```text
-                    Robot_Master
-                         │
-          ┌──────────────┼──────────────┐
-          │              │              │
-          ▼              ▼              ▼
-     Sensor_Data   Production_Log   Maintenance_Log
-          │              │              │
-          └──────────────┼──────────────┘
-                         │
-                      Date Table
+Robot_Master[Robot_ID]
+        |
+        +-- 1 : * -- Sensor_Data[Robot_ID]
+        |
+        +-- 1 : * -- Production_Log[Robot_ID]
+        |
+        +-- 1 : * -- Maintenance_Log[Robot_ID]
+
+Date_Table[Date]
+        |
+        +-- 1 : * -- Sensor_Data[Date]
+        +-- 1 : * -- Production_Log[Date]
+        +-- 1 : * -- Maintenance_Log[Date]
+```
+
+A small **Risk_Category** helper table contains High Risk, Medium Risk, and Low Risk categories for risk-distribution visuals.
+
+## Important DAX Metrics
+
+The dashboard includes measures for:
+
+- Total Robots
+- Total Units Produced
+- Defect Rate
+- Average Health Score
+- Average Temperature
+- Average Vibration
+- Average Motor Current
+- Total Maintenance Cost
+- Total Downtime Hours
+- Total Maintenance Events
+- Average Risk Score
+- High Risk Robot Count
+- Medium Risk Robot Count
+- Low Risk Robot Count
+- Unplanned Maintenance Rate
+
+A calculated risk score is used to classify robots into risk categories based on condition and operational indicators.
+
+# Dashboard
+
+## Page 1 — Executive Operations
+
+Provides a high-level overview of robot operations.
+
+### Main KPIs
+
+- Total Robots: **250**
+- Total Units Produced: **~14M**
+- Defect Rate: **2.9%**
+- Average Health Score: **47.35**
+- Total Maintenance Cost: **~214M**
+- Total Downtime: **~20.59K hours**
+
+### Main Analysis
+
+- Production trend over time
+- Maintenance cost by robot type
+- Average health by robot type
+- Temperature versus robot health
+- Maintenance events by type
+- Maintenance cost and downtime trend
+
+### Key Insight
+
+Overall production is strong, but maintenance cost and downtime represent significant opportunities for improvement.
+
+## Page 2 — Robot Health & Performance
+
+Focuses on robot condition and sensor-based health analysis.
+
+### Main KPIs
+
+- Average Health Score: **47.35**
+- Average Temperature: **54.32**
+- Average Vibration: **3.89**
+- Average Motor Current: **15.02**
+
+### Main Analysis
+
+- Health score by robot type
+- Temperature versus health
+- Bottom 10 robots by health
+- Vibration versus health
+- Motor current versus health
+- Robot risk distribution
+
+### Key Insight
+
+Condition-monitoring data helps identify unhealthy robots and supports early maintenance prioritization.
+
+The lowest-health robot identified was **Robot 228**, with an average health score of approximately **43.63**.
+
+## Page 3 — Robot Risk & Reliability Analysis
+
+Focuses on risk, failures, downtime, maintenance cost, and reliability.
+
+### Main KPIs
+
+- Average Risk Score: **50.10**
+- High Risk Robot Count: **121**
+- Average Health Score: **47.35**
+- Total Downtime: **~20.59K hours**
+
+### Main Analysis
+
+- Risk category by robot type
+- Downtime by failure type
+- High-risk robots by manufacturer
+- Overall robot risk distribution
+- Maintenance cost by failure type
+- Average risk score by robot type
+
+### Key Insights
+
+- **Packaging** has the highest number of high-risk robots: **100**.
+- **Yaskawa** has the highest absolute high-risk robot count: **27**.
+- **Servo motor failure** is a major contributor to downtime and maintenance cost.
+- **Robot 210** was identified as the highest robot for both downtime and maintenance cost.
+
+> High-risk counts by manufacturer should be considered together with the number of robots from each manufacturer. A high-risk percentage would provide a fairer comparison.
+
+## Business Value
+
+The dashboard can help operations and maintenance teams:
+
+- Identify high-risk robots
+- Prioritize maintenance activities
+- Monitor robot health
+- Understand major failure patterns
+- Reduce unexpected downtime
+- Control maintenance costs
+- Monitor production quality
+- Support data-driven maintenance decisions
+
+## Future Improvements
+
+The current project is a predictive-maintenance analytics prototype. Future enhancements could include:
+
+- Real-time IoT sensor integration
+- Machine-learning-based failure prediction
+- Remaining Useful Life (RUL) prediction
+- Anomaly detection
+- Automated maintenance alerts
+- Maintenance scheduling optimization
+- Root-cause analysis
+- Manufacturer reliability percentages
+- Cost-saving and ROI analysis
+- Integration with enterprise maintenance systems
+
+## Project Structure
+
+```text
+industrial-robot-performance-analytics/
+│
+├── README.md
+│
+├── Dataset/
+│   ├── Robot_Master.xlsx
+│   ├── Sensor_Data.xlsx
+│   ├── Production_Log.xlsx
+│   └── Maintenance_Log.xlsx
+│
+├── PowerBI/
+│   └── Industrial_Robot_Performance.pbix
+│
+├── Presentation/
+│   └── Industrial_Robot_Performance_Capstone_Presentation.pptx
+│
+└── Documentation/
+    ├── Data_Model.png
+    └── DAX_Measures.md
+```
+
+## Dashboard Story
+
+> **Page 1 tells us what is happening.**  
+> **Page 2 tells us which robots are unhealthy.**  
+> **Page 3 tells us where the risk, downtime, and maintenance cost require action.**
+
+## Disclaimer
+
+This project was created as an educational and portfolio capstone project.
+
+All operational data is synthetic and should not be interpreted as real production or maintenance data from any specific company.
+
+## Author
+
+**Abdul Azeem**
+
+**Project:** Industrial Robot Performance Analytics  
+**Domain:** Robotics | Predictive Maintenance | Business Intelligence  
+**Primary Tool:** Microsoft Power BI
